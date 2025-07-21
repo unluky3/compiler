@@ -2,9 +2,9 @@ name: Build Android APK from ZIP
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   unzip_and_build:
