@@ -21,7 +21,8 @@ jobs:
     - name: Unzip project
       run: |
         unzip Glyphify-2.0.zip -d unpacked
-        ls unpacked
+        # Recursively list unpacked contents for debugging
+        ls -R unpacked
 
     - name: Set up JDK
       uses: actions/setup-java@v3
@@ -29,6 +30,7 @@ jobs:
         distribution: 'temurin'
         java-version: 17
 
+    # Adjust the path below after checking ls -R unpacked output
     - name: Grant execute permission to gradlew
       run: chmod +x unpacked/Glyphify-2.0/gradlew
 
