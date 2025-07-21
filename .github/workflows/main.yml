@@ -14,8 +14,8 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get install -y unzip
+    - name: Install unzip and gradle
+      run: sudo apt-get update && sudo apt-get install -y unzip gradle
 
     - name: Unzip project
       run: |
@@ -28,8 +28,8 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - name: Generate Gradle wrapper if missing
-      working-directory: unpacked/Glyphify-2.0
+    - name: Generate Gradle Wrapper inside app folder (if missing)
+      working-directory: unpacked/Glyphify-2.0/app
       run: |
         if [ ! -f ./gradlew ]; then
           echo "Gradle wrapper not found, generating..."
@@ -37,14 +37,10 @@ jobs:
         else
           echo "Gradle wrapper found."
         fi
-      shell: bash
 
-    - name: Make gradlew executable
-      run: chmod +x unpacked/Glyphify-2.0/gradlew
-
-    - name: Build APK from root project
-      working-directory: unpacked/Glyphify-2.0
-      run: ./gradlew :app:assembleDebug --no-daemon
+    - name: Build APK inside app folder
+      working-directory: unpacked/Glyphify-2.0/app
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
