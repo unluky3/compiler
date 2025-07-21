@@ -22,8 +22,11 @@ jobs:
         unzip Glyphify-2.0.zip -d unpacked
         ls -R unpacked
 
-    - name: Create root settings.gradle.kts including app module
-      run: echo 'include(":app")' > unpacked/Glyphify-2.0/settings.gradle.kts
+    - name: Create root settings.gradle.kts with explicit app path
+      run: |
+        echo 'rootProject.name = "Glyphify-2.0"' > unpacked/Glyphify-2.0/settings.gradle.kts
+        echo 'include(":app")' >> unpacked/Glyphify-2.0/settings.gradle.kts
+        echo 'project(":app").projectDir = file("app")' >> unpacked/Glyphify-2.0/settings.gradle.kts
 
     - name: Set up JDK 17
       uses: actions/setup-java@v3
