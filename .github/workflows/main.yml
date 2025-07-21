@@ -8,20 +8,19 @@ on:
 
 jobs:
   unzip_and_build:
-    name: Unpack ZIP and Build APK
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-    - name: Install unzip
-      run: sudo apt-get install unzip -y
+    - name: Install unzip and gradle
+      run: |
+        sudo apt-get update
+        sudo apt-get install unzip gradle -y
 
-    - name: Unzip project
+    - name: Unzip project and list contents
       run: |
         unzip Glyphify-2.0.zip -d unpacked
-        # Recursively list unpacked contents for debugging
         ls -R unpacked
 
     - name: Set up JDK
@@ -30,17 +29,12 @@ jobs:
         distribution: 'temurin'
         java-version: 17
 
-    # Adjust the path below after checking ls -R unpacked output
-    - name: Grant execute permission to gradlew
-      run: chmod +x unpacked/Glyphify-2.0/gradlew
-
-    - name: Build APK
-      working-directory: unpacked/Glyphify-2.0
-      run: ./gradlew assembleDebug
+    - name: Build APK with system gradle
+      working-directory: unpacked/Glyphify-2.0/app
+      run: gradle assembleDebug
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
       with:
         name: glyphify-debug-apk
-        path: |
-          unpacked/Glyphify-2.0/app/build/outputs/apk/debug/app-debug.apk
+        path: unpacked/Glyphify-2.0/app/build/outputs/apk/debug/app-debug.apk
