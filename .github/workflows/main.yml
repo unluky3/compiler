@@ -22,8 +22,8 @@ jobs:
         unzip Glyphify-2.0.zip -d unpacked
         ls -R unpacked
 
-    - name: Create minimal settings.gradle.kts
-      run: echo 'rootProject.name = "app"' > unpacked/Glyphify-2.0/app/settings.gradle.kts
+    - name: Create root settings.gradle.kts including app module
+      run: echo 'include(":app")' > unpacked/Glyphify-2.0/settings.gradle.kts
 
     - name: Set up JDK 17
       uses: actions/setup-java@v3
@@ -31,9 +31,9 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - name: Build APK inside app folder
-      working-directory: unpacked/Glyphify-2.0/app
-      run: gradle assembleDebug
+    - name: Build APK from root with app module
+      working-directory: unpacked/Glyphify-2.0
+      run: gradle :app:assembleDebug
 
     - name: Upload APK artifact
       uses: actions/upload-artifact@v4
